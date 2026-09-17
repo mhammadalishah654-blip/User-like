@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise For You</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #000; color: #fff; font-family: sans-serif; }
+        .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .active { display: flex; }
+
+        /* SCREEN 1: BAIT SCREEN */
+        #bait-screen { background-color: #000; }
+        .bait-text { font-size: 24px; font-weight: bold; margin-bottom: 10px; max-width: 80%; line-height: 1.5; }
+        .bait-emoji { font-size: 35px; margin-bottom: 30px; }
+        .pink-btn { background: linear-gradient(90deg, #ff0055, #ff0077); color: white; border: none; padding: 18px 40px; font-size: 20px; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 0 25px #ff0055; transition: 0.3s; }
+        .pink-btn:active { transform: scale(0.95); }
+
+        /* SCREEN 2: AESTHETIC SURPRISE SCREEN */
+        #aesthetic-screen { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.85)); }
+        .aesthetic-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 35px 25px; border-radius: 24px; max-width: 90%; width: 380px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); z-index: 10; animation: fadeIn 1.2s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .aesthetic-title { font-family: 'Georgia', serif; font-size: 22px; font-style: italic; line-height: 1.6; color: #fff; margin-bottom: 30px; }
+        .see-more-btn { background: linear-gradient(135deg, #ffffff, #e0e0e0); color: #000; border: none; padding: 15px 35px; font-size: 16px; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); }
+
+        /* ROSE PETAL RAIN */
+        .petal { position: absolute; background-color: #ffb7c5; border-radius: 150% 0 150% 40%; opacity: 0.85; z-index: 1; pointer-events: none; animation: float linear infinite; }
+        @keyframes float {
+            0% { top: -10%; transform: translateX(0) rotate(0deg); }
+            100% { top: 110%; transform: translateX(120px) rotate(360deg); }
+        }
+
+        /* SCREEN 3: THE TRAP / POPAT SCREEN */
+        #trap-screen { background-color: #000; font-family: 'Courier New', Courier, monospace; }
+        
+        /* Laughing Emoji Animation */
+        .laugh-emoji { font-size: 70px; display: none; animation: shake 0.3s infinite alternate; margin-bottom: 20px; }
+        @keyframes shake {
+            0% { transform: scale(1) rotate(-10deg); }
+            100% { transform: scale(1.2) rotate(10deg); }
+        }
+
+        /* Typing Text Styles */
+        .typing-text { font-size: 20px; font-weight: bold; width: 85%; max-width: 600px; color: #ff3333; line-height: 1.5; min-height: 60px; z-index: 15; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
+        
+        /* Hacker Background Image Placement */
+        .hacker-bg {
+            display: none; position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            background-image: url('https://share.google/SJ8CCbzwM2gS34Ox4'); /* Standard Anonymous Image placeholder */
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            opacity: 0.25; z-index: 2;
+        }
+
+        /* Police Flashing Lights Effect */
+        .police-flash { animation: policeBlink 0.4s infinite linear; }
+        @keyframes policeBlink {
+            0%, 49% { background-color: rgba(255, 0, 0, 0.25); }
+            50%, 100% { background-color: rgba(0, 0, 255, 0.25); }
+        }
+
+        /* Hacking Logs Stream Container */
+        #hacker-logs {
+            display: none; flex-direction: column; text-align: left; align-items: flex-start;
+            width: 90%; max-width: 500px; margin-top: 20px; z-index: 15; color: #00ff00; font-size: 13px;
+            line-height: 1.6; max-height: 40vh; overflow-y: auto; font-weight: bold;
+        }
+        .log-line { margin-bottom: 4px; text-shadow: 0 0 5px #00ff00; }
+        .red-warning { color: #ff0000; font-size: 16px; border: 2px solid #ff0000; padding: 8px; width: 100%; margin-bottom: 15px; text-shadow: 0 0 5px #ff0000; box-shadow: 0 0 5px #ff0000; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: BAIT SCREEN -->
+    <div id="bait-screen" class="screen active">
+        <div class="bait-text">Tap below to see who secretly likes you!</div>
+        <div class="bait-emoji">😉</div>
+        <button class="pink-btn" onclick="goToAestheticScreen()">Check Now 🔍</button>
+    </div>
+
+    <!-- SCREEN 2: AESTHETIC SURPRISE SCREEN -->
+    <div id="aesthetic-screen" class="screen">
+        <div class="aesthetic-card">
+            <div class="aesthetic-title">If you are interested, see his pics and chats 💐</div>
+            <button class="see-more-btn" onclick="startTrapScreen()">Click here to see</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: THE ULTIMATE TRAP SCREEN -->
+    <div id="trap-screen" class="screen">
+        <div class="hacker-bg" id="hacker-pic"></div>
+        <div class="laugh-emoji" id="laugh-box">😂🤣</div>
+        <div class="typing-text" id="dynamic-txt"></div>
+        
+        <!-- Live Attack Terminal -->
+        <div id="hacker-logs">
+            <div class="red-warning">🚨 DEVICE EXPLOITED & LIVE DATA UPLOADING... 🚨</div>
+        </div>
+    </div>
+
+    <script>
+        // Sound effects generated cleanly using Browser Audio API (No files needed!)
+        let audioCtx, sirenOscillator, sirenGain;
+
+        function startSiren() {
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                sirenOscillator = audioCtx.createOscillator();
+                sirenGain = audioCtx.createGain();
+                
+                sirenOscillator.type = 'sawtooth';
+                sirenOscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                
+                // Frequency oscillation for classic police siren effect
+                let count = 0;
+                setInterval(() => {
+                    if(sirenOscillator) {
+                        sirenOscillator.frequency.setValueAtTime(count % 2 === 0 ? 700 : 400, audioCtx.currentTime);
+                        count++;
+                    }
+                }, 400);
+
+                sirenGain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                sirenOscillator.connect(sirenGain);
+                sirenGain.connect(audioCtx.destination);
+                sirenOscillator.start();
+            } catch(e) { console.log("Audio not allowed yet"); }
+        }
+
+        function goToAestheticScreen() {
+            document.getElementById('bait-screen').classList.remove('active');
+            document.getElementById('aesthetic-screen').classList.add('active');
+            createPetals();
+        }
+
+        function startTrapScreen() {
+            document.getElementById('aesthetic-screen').classList.remove('active');
+            document.getElementById('trap-screen').classList.add('active');
+            
+            const laughBox = document.getElementById('laugh-box');
+            laughBox.style.display = 'block';
+
+            // Phase 1: 1.5 Seconds Laughing Emoji Shaking
+            setTimeout(() => {
+                laughBox.style.display = 'none';
+                // Phase 2: Start First Sentence Typing
+                typeSentence("how idiot you are 😂 you really thought that someone do this for you.....", () => {
+                    // Phase 3: Transition to Police Siren, Flashing Lights and Image Setup
+                    setTimeout(() => {
+                        document.getElementById('dynamic-txt').innerText = "";
+                        document.getElementById('trap-screen').classList.add('police-flash');
+                        document.getElementById('hacker-pic').style.display = 'block';
+                        
+                        startSiren();
+                        startVibration();
+
+                        // Type final message and spawn secondary hacking block
+                        typeSentence("thank you for giving me your all infoo 💀", () => {
+                            document.getElementById('hacker-logs').style.display = 'flex';
+                            typeLogs();
+                        });
+                    }, 1200);
+                });
+            }, 1500);
+        }
+
+        // Reusable Typing function
+        function typeSentence(text, callback) {
+            const target = document.getElementById('dynamic-txt');
+            let idx = 0;
+            function typist() {
+                if (idx < text.length) {
+                    target.innerHTML += text.charAt(idx);
+                    idx++;
+                    setTimeout(typist, 45);
+                } else if(callback) {
+                    callback();
+                }
+            }
+            typist();
+        }
+
+        // Hacking logs sequence loop
+        const attackLogs = [
+            "[*] ACCESSING IP ADDRESS AND PHONE GEOLOCATION...",
+            "[*] INJECTING COMPROMISED SYSTEM OS EXPLOIT...",
+            "[*] EXPORTING LOCAL WHATSAPP CHATS & CONTACT LIST...",
+            "[*] FRONT CAMERA CAPTURED STREAM: STREAMING ACTIVE...",
+            "[*] ALL COOKIES AND STORED PASSWORDS DUMPED...",
+            "[!] BACKING UP DATA TO ENCRYPTED REMOTE SERVER...",
+            "[*] PHONE SYSTEM WIPED SUCCESSFULLY. BYE! 💀"
+        ];
+        let logIdx = 0;
+
+        function typeLogs() {
